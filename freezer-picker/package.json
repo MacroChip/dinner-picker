@@ -1,0 +1,19 @@
+{
+  "name": "freezer-picker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "parcel public/index.html --port 3000",
+    "build": "parcel build public/index.html --public-url ./"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tesseract.js": "^4.0.2",
+    "framer-motion": "^10.12.16"
+  },
+  "devDependencies": {
+    "parcel": "^2.9.3",
+    "typescript": "^5.0.4"
+  }
+}
