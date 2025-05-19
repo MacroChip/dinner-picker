@@ -21,9 +21,7 @@ export default function App() {
   const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.[0]) return;
     setLoading(true);
-    const worker = await createWorker();
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
+    const worker = await createWorker('eng');
     const {
       data: { text },
     } = await worker.recognize(e.target.files[0]);
@@ -31,10 +29,10 @@ export default function App() {
 
     const lines = text
       .split(/\n|,/) // split by newline or comma
-      .map((l: string) => l.trim().toLowerCase())
+      .map((l) => l.trim().toLowerCase())
       .filter(Boolean);
 
-    const parsedItems = lines.map<Item>((name: string) => ({ name }));
+    const parsedItems = lines.map<Item>((name) => ({ name }));
     setItems(parsedItems);
     setLoading(false);
   };
@@ -48,15 +46,13 @@ export default function App() {
   };
 
   const handleAssign = (index: number, category: Category) => {
-    setItems((prev: Item[]) =>
-      prev.map((it: Item, i: number) => (i === index ? { ...it, category } : it))
-    );
+    setItems((prev) => prev.map((it, i) => (i === index ? { ...it, category } : it)));
   };
 
   const randomize = () => {
-    const meats = items.filter((i: Item) => (i.category ?? autoCategorize(i)) === 'meat');
-    const vegetables = items.filter((i: Item) => (i.category ?? autoCategorize(i)) === 'vegetable');
-    const carbs = items.filter((i: Item) => (i.category ?? autoCategorize(i)) === 'carb');
+    const meats = items.filter((i) => (i.category ?? autoCategorize(i)) === 'meat');
+    const vegetables = items.filter((i) => (i.category ?? autoCategorize(i)) === 'vegetable');
+    const carbs = items.filter((i) => (i.category ?? autoCategorize(i)) === 'carb');
     setSelected({
       meat: meats[Math.floor(Math.random() * meats.length)]?.name,
       vegetable: vegetables[Math.floor(Math.random() * vegetables.length)]?.name,
@@ -73,14 +69,12 @@ export default function App() {
         <div>
           <h2>Items</h2>
           <ul>
-            {items.map((item: Item, index: number) => (
+            {items.map((item, index) => (
               <li key={index}>
                 {item.name}{' '}
                 <select
                   value={item.category ?? autoCategorize(item) ?? ''}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    handleAssign(index, e.target.value as Category)
-                  }
+                  onChange={(e) => handleAssign(index, e.target.value as Category)}
                 >
                   <option value="">Uncategorized</option>
                   <option value="meat">Meat</option>

@@ -26,5 +26,6 @@ To build for production:
 npm run build
 ```
 
-The build artifacts will be placed in the `dist` folder. Make sure you run
-`npm install` before building so that Parcel and TypeScript are available.
+### Deployment
+
+Pushing changes to the `main` branch triggers a GitHub Actions workflow that builds the app and publishes the `dist` directory to GitHub Pages.

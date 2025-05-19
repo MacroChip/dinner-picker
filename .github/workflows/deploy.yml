@@ -2,8 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -21,20 +21,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
-      - run: npm ci
-        working-directory: freezer-picker
-      - run: npm run build
-        working-directory: freezer-picker
-      - uses: actions/upload-pages-artifact@v1
+          node-version: '18'
+      - run: npm install --prefix freezer-picker
+      - run: npm run build --prefix freezer-picker
+      - uses: actions/upload-pages-artifact@v2
         with:
           path: freezer-picker/dist
   deploy:
     needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v1
