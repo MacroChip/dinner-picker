@@ -25,7 +25,6 @@ To build for production:
 ```bash
 npm run build
 ```
+## Deployment
 
-### Deployment
-
-Pushing changes to the `main` branch triggers a GitHub Actions workflow that builds the app and publishes the `dist` directory to GitHub Pages.
+The repository includes a GitHub Actions workflow that builds the project and deploys it to GitHub Pages. Push changes to the `main` branch to trigger the workflow. The deployment artifact is uploaded with `actions/upload-pages-artifact@v3`.

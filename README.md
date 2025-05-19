@@ -4,4 +4,4 @@ This repository contains `freezer-picker`, a React + TypeScript project that hel
 
 See [`freezer-picker/README.md`](freezer-picker/README.md) for setup and usage instructions.
 
-The repository also includes a GitHub Actions workflow that builds and deploys the app to GitHub Pages whenever changes are pushed to the `main` branch.
+A GitHub Actions workflow is provided at `.github/workflows/deploy.yml` to build and deploy the app to GitHub Pages using `actions/upload-pages-artifact@v3`.
