@@ -1,1 +1,7 @@
-# dinner-picker
+# Dinner Picker
+
+This repository contains `freezer-picker`, a React + TypeScript project that helps you choose dinner items from your freezer list.
+
+See [`freezer-picker/README.md`](freezer-picker/README.md) for setup and usage instructions.
+
+The repository also includes a GitHub Actions workflow that builds and deploys the app to GitHub Pages whenever changes are pushed to the `main` branch.
