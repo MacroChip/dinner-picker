@@ -26,15 +26,5 @@ To build for production:
 npm run build
 ```
 
-## Deployment
-
-This repository contains a GitHub Actions workflow that deploys the built app
-to **GitHub Pages**. When changes are pushed to the `main` branch (or the
-workflow is run manually), the action will:
-
-1. Install dependencies and run `npm run build`.
-2. Publish the contents of the `dist` folder to the `gh-pages` branch.
-
-After the workflow runs, enable GitHub Pages in the repository settings and
-select the `gh-pages` branch as the source. The site will then be available at
-`https://<your-username>.github.io/<repo>/`.
+The build artifacts will be placed in the `dist` folder. Make sure you run
+`npm install` before building so that Parcel and TypeScript are available.
