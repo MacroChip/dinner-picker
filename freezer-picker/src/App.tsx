@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { createWorker } from 'tesseract.js';
-
-const knownMeats = ['chicken', 'beef', 'pork', 'turkey', 'fish'];
-const knownVegetables = ['broccoli', 'carrot', 'peas', 'spinach', 'corn'];
-const knownCarbs = ['rice', 'pasta', 'bread', 'potato'];
 
 type Category = 'meat' | 'vegetable' | 'carb';
 
@@ -14,35 +9,16 @@ type Item = {
 };
 
 export default function App() {
+  const [rawInput, setRawInput] = useState('');
   const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<{ meat?: string; vegetable?: string; carb?: string }>({});
 
-  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.[0]) return;
-    setLoading(true);
-    const worker = await createWorker('eng');
-    const {
-      data: { text },
-    } = await worker.recognize(e.target.files[0]);
-    await worker.terminate();
-
-    const lines = text
-      .split(/\n|,/) // split by newline or comma
-      .map((l) => l.trim().toLowerCase())
+  const loadItems = () => {
+    const lines = rawInput
+      .split(/[\n,]/)
+      .map((l) => l.trim())
       .filter(Boolean);
-
-    const parsedItems = lines.map<Item>((name) => ({ name }));
-    setItems(parsedItems);
-    setLoading(false);
-  };
-
-  const autoCategorize = (item: Item): Category | undefined => {
-    const name = item.name.toLowerCase();
-    if (knownMeats.some((m) => name.includes(m))) return 'meat';
-    if (knownVegetables.some((v) => name.includes(v))) return 'vegetable';
-    if (knownCarbs.some((c) => name.includes(c))) return 'carb';
-    return undefined;
+    setItems(lines.map((name) => ({ name } as Item)));
   };
 
   const handleAssign = (index: number, category: Category) => {
@@ -50,9 +26,9 @@ export default function App() {
   };
 
   const randomize = () => {
-    const meats = items.filter((i) => (i.category ?? autoCategorize(i)) === 'meat');
-    const vegetables = items.filter((i) => (i.category ?? autoCategorize(i)) === 'vegetable');
-    const carbs = items.filter((i) => (i.category ?? autoCategorize(i)) === 'carb');
+    const meats = items.filter((i) => i.category === 'meat');
+    const vegetables = items.filter((i) => i.category === 'vegetable');
+    const carbs = items.filter((i) => i.category === 'carb');
     setSelected({
       meat: meats[Math.floor(Math.random() * meats.length)]?.name,
       vegetable: vegetables[Math.floor(Math.random() * vegetables.length)]?.name,
@@ -63,8 +39,16 @@ export default function App() {
   return (
     <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
       <h1>Freezer Picker</h1>
-      <input type="file" accept="image/*" onChange={handleImage} />
-      {loading && <p>Processing image...</p>}
+      <textarea
+        rows={5}
+        style={{ width: '100%', maxWidth: 400 }}
+        placeholder="Enter items separated by commas or new lines"
+        value={rawInput}
+        onChange={(e) => setRawInput(e.target.value)}
+      />
+      <div>
+        <button onClick={loadItems}>Load Items</button>
+      </div>
       {items.length > 0 && (
         <div>
           <h2>Items</h2>
@@ -73,7 +57,7 @@ export default function App() {
               <li key={index}>
                 {item.name}{' '}
                 <select
-                  value={item.category ?? autoCategorize(item) ?? ''}
+                  value={item.category ?? ''}
                   onChange={(e) => handleAssign(index, e.target.value as Category)}
                 >
                   <option value="">Uncategorized</option>
