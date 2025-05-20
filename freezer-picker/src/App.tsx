@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import PrizeWheel from './PrizeWheel';
 
 type Category = 'meat' | 'vegetable' | 'carb';
 
@@ -12,6 +13,7 @@ export default function App() {
   const [rawInput, setRawInput] = useState('');
   const [items, setItems] = useState<Item[]>([]);
   const [selected, setSelected] = useState<{ meat?: string; vegetable?: string; carb?: string }>({});
+  const [spinKey, setSpinKey] = useState(0);
 
   const loadItems = () => {
     const lines = rawInput
@@ -37,15 +39,13 @@ export default function App() {
   };
 
   const randomize = () => {
-    const meats = items.filter((i) => i.category === 'meat');
-    const vegetables = items.filter((i) => i.category === 'vegetable');
-    const carbs = items.filter((i) => i.category === 'carb');
-    setSelected({
-      meat: meats[Math.floor(Math.random() * meats.length)]?.name,
-      vegetable: vegetables[Math.floor(Math.random() * vegetables.length)]?.name,
-      carb: carbs[Math.floor(Math.random() * carbs.length)]?.name,
-    });
+    setSelected({});
+    setSpinKey((k) => k + 1);
   };
+
+  const meats = items.filter((i) => i.category === 'meat');
+  const vegetables = items.filter((i) => i.category === 'vegetable');
+  const carbs = items.filter((i) => i.category === 'carb');
 
   return (
     <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
@@ -103,6 +103,28 @@ export default function App() {
             })()}
           </div>
           <button onClick={randomize}>Pick Dinner</button>
+        </div>
+      )}
+      {spinKey > 0 && (
+        <div style={{ display: 'flex', gap: 20, marginTop: 20 }}>
+          <PrizeWheel
+            key={`meat-${spinKey}`}
+            items={meats.map((m) => m.name)}
+            label="Meat"
+            onDone={(it) => setSelected((p) => ({ ...p, meat: it }))}
+          />
+          <PrizeWheel
+            key={`veg-${spinKey}`}
+            items={vegetables.map((v) => v.name)}
+            label="Vegetable"
+            onDone={(it) => setSelected((p) => ({ ...p, vegetable: it }))}
+          />
+          <PrizeWheel
+            key={`carb-${spinKey}`}
+            items={carbs.map((c) => c.name)}
+            label="Carb"
+            onDone={(it) => setSelected((p) => ({ ...p, carb: it }))}
+          />
         </div>
       )}
       {selected.meat && selected.vegetable && selected.carb && (
