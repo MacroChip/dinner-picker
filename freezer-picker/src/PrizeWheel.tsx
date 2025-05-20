@@ -36,7 +36,10 @@ export default function PrizeWheel({ items, label, onDone }: Props) {
     setRotation(finalRot);
     const timer = setTimeout(() => onDone(items[idx]), 3000);
     return () => clearTimeout(timer);
-  }, [items, slice, onDone]);
+    // intentionally run only on mount; App remounts component when spinning
+    // to avoid repeated spins on state updates
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div style={{ textAlign: 'center', flex: 1 }}>
