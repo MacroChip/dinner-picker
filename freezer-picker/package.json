@@ -1,10 +1,11 @@
 {
   "name": "freezer-picker",
   "version": "0.1.0",
+  "homepage": "https://themacrochip.github.io/dinner-picker",
   "private": true,
   "scripts": {
     "start": "parcel public/index.html --port 3000",
-    "build": "parcel build public/index.html"
+    "build": "parcel build public/index.html --public-url ./"
   },
   "dependencies": {
     "react": "^18.2.0",
