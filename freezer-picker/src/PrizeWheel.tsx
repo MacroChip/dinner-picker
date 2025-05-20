@@ -12,6 +12,7 @@ export default function PrizeWheel({ items, label, onDone }: Props) {
   const [selectedIndex, setSelectedIndex] = useState<number>();
 
   const slice = items.length ? 360 / items.length : 0;
+  const radius = 80; // distance from center to place labels
 
   const gradient = useMemo(() => {
     if (!items.length) return 'transparent';
@@ -64,10 +65,11 @@ export default function PrizeWheel({ items, label, onDone }: Props) {
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
-                transform: `rotate(${slice * i}deg) translateY(-80px) rotate(-${slice * i}deg)`,
+                transform: `rotate(${slice * i}deg) translate(-50%, -${radius}px) rotate(-${slice * i}deg)`,
                 transformOrigin: '0 0',
                 fontSize: 12,
                 whiteSpace: 'nowrap',
+                textAlign: 'center',
               }}
             >
               {it}
