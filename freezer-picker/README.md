@@ -5,7 +5,7 @@ A simple React + TypeScript app that helps you pick dinner items from a typed li
 ## Features
 
 1. Paste a comma or newline separated list of items.
-2. Manually categorize each item as a meat, vegetable, or carb.
+2. Drag and drop each item into a meat, vegetable, or carb category.
 3. Randomly pick one item from each category and show it with an animation.
 
 ## Development

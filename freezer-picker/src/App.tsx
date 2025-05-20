@@ -21,8 +21,19 @@ export default function App() {
     setItems(lines.map((name) => ({ name } as Item)));
   };
 
-  const handleAssign = (index: number, category: Category) => {
-    setItems((prev) => prev.map((it, i) => (i === index ? { ...it, category } : it)));
+  const handleDragStart = (index: number) => (e: React.DragEvent<HTMLDivElement>) => {
+    e.dataTransfer.setData('text/plain', index.toString());
+  };
+
+  const handleDrop = (category: Category | undefined) => (
+    e: React.DragEvent<HTMLDivElement>
+  ) => {
+    e.preventDefault();
+    const index = parseInt(e.dataTransfer.getData('text/plain'), 10);
+    if (isNaN(index)) return;
+    setItems((prev) =>
+      prev.map((it, i) => (i === index ? { ...it, category } : it))
+    );
   };
 
   const randomize = () => {
@@ -51,23 +62,46 @@ export default function App() {
       </div>
       {items.length > 0 && (
         <div>
-          <h2>Items</h2>
-          <ul>
-            {items.map((item, index) => (
-              <li key={index}>
-                {item.name}{' '}
-                <select
-                  value={item.category ?? ''}
-                  onChange={(e) => handleAssign(index, e.target.value as Category)}
+          <h2>Drag items into categories</h2>
+          <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+            {(() => {
+              const catItems: Record<string, [Item, number][]> = {
+                none: [],
+                meat: [],
+                vegetable: [],
+                carb: [],
+              };
+              items.forEach((it, i) => {
+                catItems[it.category ?? 'none'].push([it, i]);
+              });
+              const cats = [
+                { key: 'none', label: 'Uncategorized', value: undefined as Category | undefined },
+                { key: 'meat', label: 'Meat', value: 'meat' as Category },
+                { key: 'vegetable', label: 'Vegetable', value: 'vegetable' as Category },
+                { key: 'carb', label: 'Carb', value: 'carb' as Category },
+              ];
+              return cats.map((c) => (
+                <div
+                  key={c.key}
+                  onDrop={handleDrop(c.value)}
+                  onDragOver={(e) => e.preventDefault()}
+                  style={{ border: '1px solid #ccc', padding: 10, minWidth: 150 }}
                 >
-                  <option value="">Uncategorized</option>
-                  <option value="meat">Meat</option>
-                  <option value="vegetable">Vegetable</option>
-                  <option value="carb">Carb</option>
-                </select>
-              </li>
-            ))}
-          </ul>
+                  <h3>{c.label}</h3>
+                  {catItems[c.key].map(([it, i]) => (
+                    <div
+                      key={i}
+                      draggable
+                      onDragStart={handleDragStart(i)}
+                      style={{ margin: '4px 0', padding: '4px', border: '1px solid #ddd' }}
+                    >
+                      {it.name}
+                    </div>
+                  ))}
+                </div>
+              ));
+            })()}
+          </div>
           <button onClick={randomize}>Pick Dinner</button>
         </div>
       )}
